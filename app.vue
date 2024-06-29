@@ -5,6 +5,7 @@ useSeoMeta({
   description: 'UI Community is the platform where participants can share their snippet ui code.',
   ogDescription: 'UI Community is the platform where participants can share their snippet ui code.',
 })
+
 </script>
 
 <template>
