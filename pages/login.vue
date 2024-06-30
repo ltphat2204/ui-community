@@ -1,10 +1,5 @@
 <script setup>
 import firebaseErrorParser from '~/utils/firebaseErrorParser'
-import { signInWithEmailAndPassword, signInWithRedirect } from "firebase/auth"; 
-import { GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
-
-const googleProvider = new GoogleAuthProvider();
-const githubProvider = new GithubAuthProvider();
 
 const email = ref('')
 const password = ref('')
