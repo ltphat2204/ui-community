@@ -8,7 +8,9 @@
             <NuxtLink to="/help">
                 <Icon name="material-symbols-light:help"/>
             </NuxtLink>
-            <Icon class="cursor-pointer" name="material-symbols:account-circle"/>
+            <NuxtLink to="/login">
+                <Icon class="cursor-pointer" name="material-symbols:account-circle"/>
+            </NuxtLink>
         </div>
     </header>
 </template>

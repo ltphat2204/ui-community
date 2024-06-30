@@ -16,7 +16,7 @@ const handleSearch = async () => {
         <h1 class="text-4xl md:text-6xl font-bold">UI snippets sharing platform</h1>
         <p class="text-sm md:text-lg">Where you can share your UI snippets with the world.</p>
     </section>
-    <section class="w-full max-w-[1100px] mx-auto mt-8">
+    <section class="mt-8">
         <form @submit.prevent="handleSearch" class="w-full max-w-[800px] mx-auto border border-gray-300 rounded-lg py-2 px-4 bg-white flex items-center">
             <input type="text" placeholder="Search for snippets" class="w-full outline-none bg-transparent" v-model="search">
             <NuxtLink :to="search ? `/search?query=${search}` : ''">
