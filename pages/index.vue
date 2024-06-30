@@ -1,5 +1,6 @@
 <script setup>
 const search = ref('')
+const focus = ref(null)
 
 const handleSearch = async () => {
     const searchQuery = search.value
@@ -9,6 +10,10 @@ const handleSearch = async () => {
         await navigateTo(url)
     }
 }
+
+onMounted(() => {
+    focus.value.focus()
+})
 </script>
 
 <template>
@@ -18,7 +23,7 @@ const handleSearch = async () => {
     </section>
     <section class="mt-8">
         <form @submit.prevent="handleSearch" class="w-full max-w-[800px] mx-auto border border-gray-300 rounded-lg py-2 px-4 bg-white flex items-center">
-            <input type="text" placeholder="Search for snippets" class="w-full outline-none bg-transparent" v-model="search">
+            <input ref="focus" type="text" placeholder="Search for snippets" class="w-full outline-none bg-transparent" v-model="search">
             <NuxtLink :to="search ? `/search?query=${search}` : ''">
                 <Icon class="text-2xl" name="material-symbols:search"/>
             </NuxtLink>

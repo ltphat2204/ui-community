@@ -8,6 +8,7 @@ const password2 = ref('')
 const error = ref('')
 const isSubmitting = ref(false)
 const isSuccessful = ref(false)
+const focus = ref(null)
 
 const { $firebaseAuth } = useNuxtApp()
 
@@ -31,6 +32,10 @@ const handleRegister = async () => {
         error.value = firebaseErrorParser[err.code]
     }
 }
+
+onMounted(() => {
+    focus.value.focus()
+})
 </script>
 
 <template>
@@ -39,7 +44,7 @@ const handleRegister = async () => {
         <h3 class="text-xl">Register new account</h3>
         <div class="mt-8 flex flex-col gap-2">
             <label for="email">Email:</label>
-            <input required placeholder="example@something.com"class="outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-700 p-2" type="email" id="email" v-model="email">
+            <input ref="focus" required placeholder="example@something.com"class="outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-700 p-2" type="email" id="email" v-model="email">
         </div>
         <div class="mt-4 flex flex-col gap-2">
             <label for="password">Password:</label>
