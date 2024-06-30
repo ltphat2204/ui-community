@@ -1,5 +1,9 @@
 <script setup>
-import { signInWithEmailAndPassword  } from "firebase/auth"; 
+import { signInWithEmailAndPassword, signInWithRedirect } from "firebase/auth"; 
+import { GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 
 const email = ref('')
 const password = ref('')
@@ -23,6 +27,22 @@ const handleLogin = async () => {
         }, 500);
     } catch (err) {
         error.value = firebaseErrorParser[err.code]
+    }
+}
+
+const handleLoginByGoogle = async () => {
+    try {
+        await signInWithRedirect($firebaseAuth, googleProvider)
+    } catch (err) {
+        error.value = firebaseErrorParser[err.code] || err.message
+    }
+}
+
+const handleLoginByGithub = async () => {
+    try {
+        await signInWithRedirect($firebaseAuth, githubProvider)
+    } catch (err) {
+        error.value = firebaseErrorParser[err.code] || err.message
     }
 }
 
@@ -57,5 +77,8 @@ onMounted(() => {
         <div>
             <p class="mt-4">Don't have an account? <NuxtLink to="/register" class="text-sky-700">Register</NuxtLink></p>
         </div>
+        <div class="text-center my-4 overflow-hidden relative before:content-[''] before:absolute before:w-screen before:h-[1px] before:top-1/2 before:right-1/2 before:-translate-x-4 before:bg-gray-400 after:content-[''] after:absolute after:w-screen after:h-[1px] after:top-1/2 after:left-1/2 after:translate-x-4 after:bg-gray-400 bg-white">Or</div>
+        <div @click="handleLoginByGoogle" class="w-full cursor-pointer text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 bg-gray-700">Sign in with <Icon class="text-xl" name="bi:google"/> </div>
+        <div @click="handleLoginByGithub" class="mt-4 w-full cursor-pointer text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 bg-gray-700">Sign in with <Icon class="text-2xl" name="mdi:github"/> </div>
     </form>
 </template>
