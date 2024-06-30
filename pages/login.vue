@@ -1,4 +1,5 @@
 <script setup>
+import firebaseErrorParser from '~/utils/firebaseErrorParser'
 import { signInWithEmailAndPassword, signInWithRedirect } from "firebase/auth"; 
 import { GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 
@@ -8,16 +9,21 @@ const githubProvider = new GithubAuthProvider();
 const email = ref('')
 const password = ref('')
 const error = ref('')
+
 const isSubmitting = ref(false)
 const isSuccessful = ref(false)
+
 const focus = ref(null)
 
-const { $firebaseAuth } = useNuxtApp()
+const userStore = useUserStore()
 
-const handleLogin = async () => {
+const { $firebaseAuth, $loginMethod } = useNuxtApp()
+
+const handleLogin = async (type, payload) => {
     try {
         isSubmitting.value = true
-        const { user } = await signInWithEmailAndPassword($firebaseAuth, email.value, password.value)
+        const user = await $loginMethod($firebaseAuth, type, payload)
+        userStore.setUser(user)
     
         isSubmitting.value = false
         isSuccessful.value = true
@@ -26,33 +32,22 @@ const handleLogin = async () => {
             await navigateTo('/')
         }, 500);
     } catch (err) {
-        error.value = firebaseErrorParser[err.code]
+        isSubmitting.value = false
+        error.value = err
     }
 }
 
-const handleLoginByGoogle = async () => {
-    try {
-        await signInWithRedirect($firebaseAuth, googleProvider)
-    } catch (err) {
-        error.value = firebaseErrorParser[err.code] || err.message
+onMounted(async () => {
+    if (userStore.isLoggedIn) {
+        await navigateTo('/')
     }
-}
 
-const handleLoginByGithub = async () => {
-    try {
-        await signInWithRedirect($firebaseAuth, githubProvider)
-    } catch (err) {
-        error.value = firebaseErrorParser[err.code] || err.message
-    }
-}
-
-onMounted(() => {
     focus.value.focus()
 })
 </script>
 
 <template>
-    <form class="w-fit mx-auto bg-white border border-gray-300 rounded-lg py-8 px-16 shadow" @submit.prevent="handleLogin">
+    <form class="w-fit mx-auto bg-white border border-gray-300 rounded-lg py-8 px-16 shadow" @submit.prevent="handleLogin('email', { email, password })">
         <h1 class="text-4xl font-bold">Welcome back</h1>
         <h3 class="text-xl">Login to continue</h3>
         <div class="mt-8 flex flex-col gap-2">
@@ -78,7 +73,7 @@ onMounted(() => {
             <p class="mt-4">Don't have an account? <NuxtLink to="/register" class="text-sky-700">Register</NuxtLink></p>
         </div>
         <div class="text-center my-4 overflow-hidden relative before:content-[''] before:absolute before:w-screen before:h-[1px] before:top-1/2 before:right-1/2 before:-translate-x-4 before:bg-gray-400 after:content-[''] after:absolute after:w-screen after:h-[1px] after:top-1/2 after:left-1/2 after:translate-x-4 after:bg-gray-400 bg-white">Or</div>
-        <div @click="handleLoginByGoogle" class="w-full cursor-pointer text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 bg-gray-700">Sign in with <Icon class="text-xl" name="bi:google"/> </div>
-        <div @click="handleLoginByGithub" class="mt-4 w-full cursor-pointer text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 bg-gray-700">Sign in with <Icon class="text-2xl" name="mdi:github"/> </div>
+        <div @click="handleLogin('google')" class="w-full cursor-pointer text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 bg-gray-700">Sign in with <Icon class="text-xl" name="bi:google"/> </div>
+        <div @click="handleLogin('github')" class="mt-4 w-full cursor-pointer text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 bg-gray-700">Sign in with <Icon class="text-2xl" name="mdi:github"/> </div>
     </form>
 </template>
