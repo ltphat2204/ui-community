@@ -15,5 +15,21 @@ export default defineNuxtConfig({
         measurementId: process.env.FIREBASE_ANALYTICS_ID
       }
     }
+  },
+  tailwindcss: {
+    config: {
+      theme: {
+        extend: {
+          "flexBasis": {
+            "1/2": "calc(50% - 1rem)",
+            "1/3": "calc(33.33% - 1rem)",
+          },
+          "width": {
+            "1/2": "calc(50% - 1rem)",
+            "1/3": "calc(33.33% - 1rem)",
+          }
+        }
+      }
+    }
   }
 })

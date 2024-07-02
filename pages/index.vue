@@ -1,6 +1,8 @@
 <script setup>
+import MockData from '~/utils/mockData.json'
 const search = ref('')
 const focus = ref(null)
+const snippets = ref(MockData)
 
 const handleSearch = async () => {
     const searchQuery = search.value
@@ -28,5 +30,11 @@ onMounted(() => {
                 <Icon class="text-2xl" name="material-symbols:search"/>
             </NuxtLink>
         </form>
+    </section>
+    <section class="mt-8">
+        <h2 class="text-2xl font-bold mb-8">Featured snippets</h2>
+        <div class="flex flex-wrap gap-4">
+            <SnippetCard v-for="snippet in snippets" :key="snippet.id" :snippet="snippet"/>
+        </div>
     </section>
 </template>
